@@ -3,10 +3,10 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from taproot.providers.base import LLMProvider, LLMResponse
+from problemist.providers.base import LLMProvider, LLMResponse
 
 if TYPE_CHECKING:
-    from taproot.scrubbing.scrubber import DataScrubber
+    from problemist.scrubbing.scrubber import DataScrubber
 
 logger = logging.getLogger(__name__)
 

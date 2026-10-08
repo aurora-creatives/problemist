@@ -12,7 +12,7 @@ body:
     attributes:
       label: What happened?
       description: A clear description of the bug.
-      placeholder: "When I run `taproot run`, it..."
+      placeholder: "When I run `problemist run`, it..."
     validations:
       required: true
 
@@ -22,7 +22,7 @@ body:
       label: Steps to reproduce
       description: Exact commands or actions to trigger the bug.
       placeholder: |
-        1. Run `taproot run --days 90`
+        1. Run `problemist run --days 90`
         2. See error...
     validations:
       required: true
@@ -47,10 +47,10 @@ body:
     attributes:
       label: Which command?
       options:
-        - taproot run
-        - taproot review
-        - taproot list-tickets
-        - taproot list-problems
+        - problemist run
+        - problemist review
+        - problemist list-tickets
+        - problemist list-problems
         - Other / not CLI
     validations:
       required: true

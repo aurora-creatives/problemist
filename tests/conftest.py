@@ -3,9 +3,9 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from taproot.models.problem import ProblemPriority, ProblemRecord, ProblemStatus
-from taproot.models.ticket import Ticket, TicketPriority, TicketStatus
-from taproot.pageindex import PageIndex
+from problemist.models.problem import ProblemPriority, ProblemRecord, ProblemStatus
+from problemist.models.ticket import Ticket, TicketPriority, TicketStatus
+from problemist.pageindex import PageIndex
 
 
 @pytest.fixture

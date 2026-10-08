@@ -11,7 +11,7 @@ body:
     id: area
     attributes:
       label: Area
-      description: Which part of taproot does this relate to?
+      description: Which part of problemist does this relate to?
       options:
         - Agent / analysis loop
         - PageIndex (similarity search)
@@ -29,7 +29,7 @@ body:
     attributes:
       label: What problem does this solve?
       description: Describe the pain point or gap in current behaviour.
-      placeholder: "Currently, taproot can only... which means I have to..."
+      placeholder: "Currently, problemist can only... which means I have to..."
     validations:
       required: true
 

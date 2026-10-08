@@ -1,12 +1,12 @@
-# Contributing to taproot
+# Contributing to problemist
 
-Thank you for your interest in contributing. taproot is a focused tool — contributions that add scope creep will be declined, but improvements to correctness, performance, test coverage, and ITSM integrations are very welcome.
+Thank you for your interest in contributing. problemist is a focused tool — contributions that add scope creep will be declined, but improvements to correctness, performance, test coverage, and ITSM integrations are very welcome.
 
 ## Development setup
 
 ```bash
-git clone https://github.com/aurora-creatives/taproot
-cd taproot
+git clone https://github.com/aurora-creatives/problemist
+cd problemist
 pip install -e ".[dev]"
 cp .env.example .env
 # Add your ANTHROPIC_API_KEY to .env for integration testing
@@ -16,11 +16,11 @@ cp .env.example .env
 
 ```bash
 pytest                        # full test suite
-pytest --cov=taproot          # with coverage report
+pytest --cov=problemist          # with coverage report
 pytest tests/test_pageindex.py  # single module
 ```
 
-All tests must pass with zero failures before submitting a pull request. Tests must not make real API calls — mock `taproot.agent.LLMRouter` and any provider class in tests that exercise the agent or LLM reranking.
+All tests must pass with zero failures before submitting a pull request. Tests must not make real API calls — mock `problemist.agent.LLMRouter` and any provider class in tests that exercise the agent or LLM reranking.
 
 ## Code standards
 

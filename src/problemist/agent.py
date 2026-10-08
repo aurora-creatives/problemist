@@ -8,12 +8,12 @@ from rich.live import Live
 from rich.panel import Panel
 from rich.table import Table
 
-from taproot.config import get_settings
-from taproot.mock.data_loader import MockDataLoader
-from taproot.models.problem import AnalysisSummary
-from taproot.pageindex import PageIndex
-from taproot.providers import LLMRouter, TaskType
-from taproot.tools import (
+from problemist.config import get_settings
+from problemist.mock.data_loader import MockDataLoader
+from problemist.models.problem import AnalysisSummary
+from problemist.pageindex import PageIndex
+from problemist.providers import LLMRouter, TaskType
+from problemist.tools import (
     TOOL_DEFINITIONS,
     analyze_ticket_cluster,
     draft_problem_record,
@@ -22,8 +22,8 @@ from taproot.tools import (
     get_ticket_details,
     search_similar_tickets,
 )
-from taproot.tools.problems import clear_draft_store, get_draft_store
-from taproot.tools.tickets import set_page_index
+from problemist.tools.problems import clear_draft_store, get_draft_store
+from problemist.tools.tickets import set_page_index
 
 logger = logging.getLogger(__name__)
 console = Console()
@@ -97,7 +97,7 @@ def _make_status_panel(
     table.add_row("Records drafted", str(records_drafted))
     table.add_row("Iteration", f"{iteration} / {_MAX_ITERATIONS}")
     table.add_row("Elapsed", f"{elapsed:.1f}s")
-    return Panel(table, title="[bold green]taproot — agent running[/bold green]", border_style="green")
+    return Panel(table, title="[bold green]problemist — agent running[/bold green]", border_style="green")
 
 
 async def run_analysis(

@@ -1,6 +1,6 @@
-from taproot.tools.analysis import analyze_ticket_cluster
-from taproot.tools.problems import draft_problem_record, get_existing_problems
-from taproot.tools.tickets import (
+from problemist.tools.analysis import analyze_ticket_cluster
+from problemist.tools.problems import draft_problem_record, get_existing_problems
+from problemist.tools.tickets import (
     fetch_tickets,
     get_ticket_details,
     search_similar_tickets,

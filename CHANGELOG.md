@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to taproot are documented here.
+All notable changes to problemist are documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -8,6 +8,15 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ---
 
 ## [Unreleased]
+
+### Changed
+- **Renamed the project from `taproot` to `problemist`.** The package is now `problemist`, and the CLI command is `problemist` (`problemist run`, `problemist review`, ...). Existing editable installs need `git pull` then `pip install -e .` again.
+
+### Fixed
+- Mock fixture tickets are now windowed back from the newest ticket, not from today's date. Previously `--days 90` returned no tickets once the fixtures were more than 90 days old, which broke the README demo and two tests.
+
+### Added
+- Tests for the mock data loader's time window and for the AWS Bedrock provider.
 
 ---
 
@@ -36,13 +45,13 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **Agent loop** — async OpenAI function-calling agent that reasons over incident ticket history and drafts ITIL problem records autonomously (`agent.py`)
 - **PageIndex** — BM25 similarity search with optional LLM reranking; no vector database required (`pageindex.py`)
 - **Six tools** — `fetch_tickets`, `get_ticket_details`, `search_similar_tickets`, `get_existing_problems`, `analyze_ticket_cluster`, `draft_problem_record`
-- **CLI** — four commands: `taproot run`, `taproot review`, `taproot list-tickets`, `taproot list-problems`
+- **CLI** — four commands: `problemist run`, `problemist review`, `problemist list-tickets`, `problemist list-problems`
 - **Mock data** — 35 fixture tickets with 3 hidden recurring patterns (auth token expiry, report generation slowness, email notification delays) and 8 noise incidents
 - **Human-in-the-loop review** — interactive approval/rejection flow; nothing auto-publishes
 - **Pydantic v2 models** — `Ticket`, `ProblemRecord`, `AnalysisSummary` with full validation
 - **45 tests** — full offline test suite, zero real API calls
 - **GitHub Actions CI** — lint (ruff) + pytest matrix (Python 3.11, 3.12, 3.13)
 
-[Unreleased]: https://github.com/aurora-creatives/taproot/compare/v0.2.0...HEAD
-[0.2.0]: https://github.com/aurora-creatives/taproot/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/aurora-creatives/taproot/releases/tag/v0.1.0
+[Unreleased]: https://github.com/aurora-creatives/problemist/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/aurora-creatives/problemist/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/aurora-creatives/problemist/releases/tag/v0.1.0

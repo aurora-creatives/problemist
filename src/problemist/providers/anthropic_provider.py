@@ -4,7 +4,7 @@ import logging
 
 import anthropic
 
-from taproot.providers.base import LLMResponse, ToolCall
+from problemist.providers.base import LLMResponse, ToolCall
 
 logger = logging.getLogger(__name__)
 

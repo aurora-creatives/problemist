@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from taproot.providers.base import LLMResponse
+from problemist.providers.base import LLMResponse
 
 
 def _anthropic_text_response(text: str = "Done.") -> MagicMock:
@@ -60,12 +60,12 @@ def _openai_tool_response(tool_name: str, tool_id: str, arguments: dict) -> Magi
 class TestAnthropicProvider:
     @pytest.mark.asyncio
     async def test_complete_returns_llm_response(self) -> None:
-        with patch("taproot.providers.anthropic_provider.anthropic.AsyncAnthropic") as mock_cls:
+        with patch("problemist.providers.anthropic_provider.anthropic.AsyncAnthropic") as mock_cls:
             mock_client = AsyncMock()
             mock_cls.return_value = mock_client
             mock_client.messages.create = AsyncMock(return_value=_anthropic_text_response("Analysis done."))
 
-            from taproot.providers.anthropic_provider import AnthropicProvider
+            from problemist.providers.anthropic_provider import AnthropicProvider
             provider = AnthropicProvider(api_key="test-key", model="claude-sonnet-4-20250514")
             response = await provider.complete([{"role": "user", "content": "Hello"}])
 
@@ -77,14 +77,14 @@ class TestAnthropicProvider:
 
     @pytest.mark.asyncio
     async def test_complete_maps_tool_use_blocks(self) -> None:
-        with patch("taproot.providers.anthropic_provider.anthropic.AsyncAnthropic") as mock_cls:
+        with patch("problemist.providers.anthropic_provider.anthropic.AsyncAnthropic") as mock_cls:
             mock_client = AsyncMock()
             mock_cls.return_value = mock_client
             mock_client.messages.create = AsyncMock(
                 return_value=_anthropic_tool_response("fetch_tickets", "tu_001", {"days": 30})
             )
 
-            from taproot.providers.anthropic_provider import AnthropicProvider
+            from problemist.providers.anthropic_provider import AnthropicProvider
             provider = AnthropicProvider(api_key="test-key")
             response = await provider.complete([{"role": "user", "content": "Analyse"}])
 
@@ -96,12 +96,12 @@ class TestAnthropicProvider:
 
     @pytest.mark.asyncio
     async def test_complete_simple_returns_string(self) -> None:
-        with patch("taproot.providers.anthropic_provider.anthropic.AsyncAnthropic") as mock_cls:
+        with patch("problemist.providers.anthropic_provider.anthropic.AsyncAnthropic") as mock_cls:
             mock_client = AsyncMock()
             mock_cls.return_value = mock_client
             mock_client.messages.create = AsyncMock(return_value=_anthropic_text_response("Reranked."))
 
-            from taproot.providers.anthropic_provider import AnthropicProvider
+            from problemist.providers.anthropic_provider import AnthropicProvider
             provider = AnthropicProvider(api_key="test-key")
             result = await provider.complete_simple("Rerank these tickets.")
 
@@ -112,12 +112,12 @@ class TestAnthropicProvider:
 class TestOpenAIProvider:
     @pytest.mark.asyncio
     async def test_complete_returns_llm_response(self) -> None:
-        with patch("taproot.providers.openai_provider.openai.AsyncOpenAI") as mock_cls:
+        with patch("problemist.providers.openai_provider.openai.AsyncOpenAI") as mock_cls:
             mock_client = AsyncMock()
             mock_cls.return_value = mock_client
             mock_client.chat.completions.create = AsyncMock(return_value=_openai_text_response("Done."))
 
-            from taproot.providers.openai_provider import OpenAIProvider
+            from problemist.providers.openai_provider import OpenAIProvider
             provider = OpenAIProvider(api_key="test-key", model="gpt-4o")
             response = await provider.complete([{"role": "user", "content": "Hello"}])
 
@@ -128,14 +128,14 @@ class TestOpenAIProvider:
 
     @pytest.mark.asyncio
     async def test_complete_maps_tool_calls(self) -> None:
-        with patch("taproot.providers.openai_provider.openai.AsyncOpenAI") as mock_cls:
+        with patch("problemist.providers.openai_provider.openai.AsyncOpenAI") as mock_cls:
             mock_client = AsyncMock()
             mock_cls.return_value = mock_client
             mock_client.chat.completions.create = AsyncMock(
                 return_value=_openai_tool_response("fetch_tickets", "call_001", {"days": 30})
             )
 
-            from taproot.providers.openai_provider import OpenAIProvider
+            from problemist.providers.openai_provider import OpenAIProvider
             provider = OpenAIProvider(api_key="test-key")
             response = await provider.complete([{"role": "user", "content": "Analyse"}])
 
@@ -147,12 +147,12 @@ class TestOpenAIProvider:
     @pytest.mark.asyncio
     async def test_translates_anthropic_tool_format_to_openai(self) -> None:
         """complete() with Anthropic-format tools must pass OpenAI function format to the API."""
-        with patch("taproot.providers.openai_provider.openai.AsyncOpenAI") as mock_cls:
+        with patch("problemist.providers.openai_provider.openai.AsyncOpenAI") as mock_cls:
             mock_client = AsyncMock()
             mock_cls.return_value = mock_client
             mock_client.chat.completions.create = AsyncMock(return_value=_openai_text_response())
 
-            from taproot.providers.openai_provider import OpenAIProvider
+            from problemist.providers.openai_provider import OpenAIProvider
             provider = OpenAIProvider(api_key="test-key")
 
             anthropic_tools = [
@@ -176,12 +176,12 @@ class TestOpenAIProvider:
 
     @pytest.mark.asyncio
     async def test_finish_reason_stop_maps_to_end_turn(self) -> None:
-        with patch("taproot.providers.openai_provider.openai.AsyncOpenAI") as mock_cls:
+        with patch("problemist.providers.openai_provider.openai.AsyncOpenAI") as mock_cls:
             mock_client = AsyncMock()
             mock_cls.return_value = mock_client
             mock_client.chat.completions.create = AsyncMock(return_value=_openai_text_response())
 
-            from taproot.providers.openai_provider import OpenAIProvider
+            from problemist.providers.openai_provider import OpenAIProvider
             provider = OpenAIProvider(api_key="test-key")
             response = await provider.complete([{"role": "user", "content": "Hi"}])
 
@@ -189,12 +189,12 @@ class TestOpenAIProvider:
 
     @pytest.mark.asyncio
     async def test_complete_simple_returns_string(self) -> None:
-        with patch("taproot.providers.openai_provider.openai.AsyncOpenAI") as mock_cls:
+        with patch("problemist.providers.openai_provider.openai.AsyncOpenAI") as mock_cls:
             mock_client = AsyncMock()
             mock_cls.return_value = mock_client
             mock_client.chat.completions.create = AsyncMock(return_value=_openai_text_response("Reranked."))
 
-            from taproot.providers.openai_provider import OpenAIProvider
+            from problemist.providers.openai_provider import OpenAIProvider
             provider = OpenAIProvider(api_key="test-key")
             result = await provider.complete_simple("Rerank these.")
 
@@ -205,12 +205,12 @@ class TestOpenAIProvider:
 class TestAzureOpenAIProvider:
     @pytest.mark.asyncio
     async def test_complete_returns_llm_response(self) -> None:
-        with patch("taproot.providers.azure_openai_provider.openai.AsyncAzureOpenAI") as mock_cls:
+        with patch("problemist.providers.azure_openai_provider.openai.AsyncAzureOpenAI") as mock_cls:
             mock_client = AsyncMock()
             mock_cls.return_value = mock_client
             mock_client.chat.completions.create = AsyncMock(return_value=_openai_text_response("Azure done."))
 
-            from taproot.providers.azure_openai_provider import AzureOpenAIProvider
+            from problemist.providers.azure_openai_provider import AzureOpenAIProvider
             provider = AzureOpenAIProvider(
                 endpoint="https://resource.openai.azure.com",
                 api_key="key",
@@ -223,8 +223,8 @@ class TestAzureOpenAIProvider:
         assert response.stop_reason == "end_turn"
 
     def test_provider_name_is_azure_openai(self) -> None:
-        with patch("taproot.providers.azure_openai_provider.openai.AsyncAzureOpenAI"):
-            from taproot.providers.azure_openai_provider import AzureOpenAIProvider
+        with patch("problemist.providers.azure_openai_provider.openai.AsyncAzureOpenAI"):
+            from problemist.providers.azure_openai_provider import AzureOpenAIProvider
             p = AzureOpenAIProvider("https://ep.azure.com", "key", "dep")
         assert p.provider_name == "azure_openai"
 
@@ -232,8 +232,8 @@ class TestAzureOpenAIProvider:
 class TestScrubbedProvider:
     @pytest.mark.asyncio
     async def test_scrubs_content_before_calling_inner(self) -> None:
-        from taproot.providers.scrubbed_provider import ScrubbedProvider
-        from taproot.scrubbing.scrubber import DataScrubber
+        from problemist.providers.scrubbed_provider import ScrubbedProvider
+        from problemist.scrubbing.scrubber import DataScrubber
 
         inner = MagicMock()
         inner.provider_name = "openai"
@@ -255,8 +255,8 @@ class TestScrubbedProvider:
         assert "<<EMAIL_1>>" in captured["messages"][0]["content"]
 
     def test_provider_name_prefixed(self) -> None:
-        from taproot.providers.scrubbed_provider import ScrubbedProvider
-        from taproot.scrubbing.scrubber import DataScrubber
+        from problemist.providers.scrubbed_provider import ScrubbedProvider
+        from problemist.scrubbing.scrubber import DataScrubber
 
         inner = MagicMock()
         inner.provider_name = "anthropic"

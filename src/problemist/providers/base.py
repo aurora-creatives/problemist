@@ -23,7 +23,7 @@ class LLMResponse(BaseModel):
 class LLMProvider(Protocol):
     """
     Provider-agnostic interface for LLM completions.
-    All taproot LLM calls go through this interface.
+    All problemist LLM calls go through this interface.
     Tools are always in Anthropic format — each provider translates internally.
     """
 

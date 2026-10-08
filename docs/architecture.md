@@ -1,10 +1,10 @@
-# taproot — Architecture
+# problemist — Architecture
 
 ## System overview
 
-taproot is a batch analysis tool that reads historical incident ticket data, identifies recurring patterns using an AI reasoning agent, and produces ITIL-compliant problem records for human review. It is designed to accelerate ITSM Problem Management in organisations where problem records are rarely created — not because incidents aren't recurring, but because no one has the bandwidth to find the patterns.
+problemist is a batch analysis tool that reads historical incident ticket data, identifies recurring patterns using an AI reasoning agent, and produces ITIL-compliant problem records for human review. It is designed to accelerate ITSM Problem Management in organisations where problem records are rarely created — not because incidents aren't recurring, but because no one has the bandwidth to find the patterns.
 
-taproot is not an incident response tool. It does not receive webhooks, react to live alerts, or integrate into an incident management workflow. It is run on-demand or on a schedule over a rolling window of historical tickets. It is not an AIOps or observability platform — it does not read metrics, traces, or logs. Its input is ticket text: titles, descriptions, and resolution notes. It is also not a replacement for your ITSM platform — it outputs to JSON files and is designed to feed back into your existing problem management workflow via a human review step.
+problemist is not an incident response tool. It does not receive webhooks, react to live alerts, or integrate into an incident management workflow. It is run on-demand or on a schedule over a rolling window of historical tickets. It is not an AIOps or observability platform — it does not read metrics, traces, or logs. Its input is ticket text: titles, descriptions, and resolution notes. It is also not a replacement for your ITSM platform — it outputs to JSON files and is designed to feed back into your existing problem management workflow via a human review step.
 
 ---
 
@@ -51,10 +51,10 @@ The fixture data contains 35 tickets with three hidden recurring patterns (auth 
 
 Four commands:
 
-- `taproot run` — runs the agent and saves draft problem records to JSON.
-- `taproot review` — interactive human review of draft records.
-- `taproot list-tickets` — shows a table of tickets matching filters.
-- `taproot list-problems` — shows all existing problem records.
+- `problemist run` — runs the agent and saves draft problem records to JSON.
+- `problemist review` — interactive human review of draft records.
+- `problemist list-tickets` — shows a table of tickets matching filters.
+- `problemist list-problems` — shows all existing problem records.
 
 The CLI uses `typer` for argument parsing and `rich` for terminal output.
 
@@ -64,7 +64,7 @@ The CLI uses `typer` for argument parsing and `rich` for terminal output.
 
 The decision to use local models instead of external embedding APIs was deliberate:
 
-**No infrastructure dependency.** External vector search requires an embedding API and a vector database (Pinecone, Weaviate, pgvector, etc.). taproot's hybrid index lives entirely in memory and is rebuilt in seconds — no additional services to run or manage.
+**No infrastructure dependency.** External vector search requires an embedding API and a vector database (Pinecone, Weaviate, pgvector, etc.). problemist's hybrid index lives entirely in memory and is rebuilt in seconds — no additional services to run or manage.
 
 **No embedding costs.** Every ticket processed through an external embedding API incurs a cost. `sentence-transformers` runs locally and is free at inference time. For a tool designed to run over a rolling window of hundreds or thousands of tickets, this matters.
 
@@ -100,7 +100,7 @@ All tool calls in a single turn are executed before sending the next request. Re
 
 ## Human-in-the-loop design
 
-taproot never auto-approves or auto-publishes problem records. The `draft_problem_record` tool writes to an in-session store. The `taproot run` command saves drafts to a JSON file. The `taproot review` command presents each draft interactively.
+problemist never auto-approves or auto-publishes problem records. The `draft_problem_record` tool writes to an in-session store. The `problemist run` command saves drafts to a JSON file. The `problemist review` command presents each draft interactively.
 
 This design is intentional. An AI agent identifying recurring patterns is useful; an AI agent unilaterally creating problem records in your ITSM system is not. Problem records have organisational weight — they trigger investigations, resource allocation, and change management processes. A human must own that decision.
 
@@ -108,11 +108,11 @@ The confidence field (`HIGH` / `MEDIUM` / `LOW`) is designed to guide review pri
 
 ---
 
-## Extending taproot
+## Extending problemist
 
 ### Adding a new ITSM provider
 
-1. Create `src/taproot/providers/<name>.py` implementing a class with the same interface as `MockDataLoader`: `get_tickets()`, `get_ticket_by_id()`, `get_all_tickets()`, `get_problems()`.
+1. Create `src/problemist/providers/<name>.py` implementing a class with the same interface as `MockDataLoader`: `get_tickets()`, `get_ticket_by_id()`, `get_all_tickets()`, `get_problems()`.
 2. Add configuration variables to `Settings` in `config.py`.
 3. In `tools/tickets.py` and `tools/problems.py`, add a branch that instantiates your provider when `use_mock_data=False` and the relevant credentials are set.
 
@@ -125,7 +125,7 @@ The confidence field (`HIGH` / `MEDIUM` / `LOW`) is designed to guide review pri
 
 ### Swapping the LLM
 
-taproot supports four LLM providers out of the box: **Anthropic**, **OpenAI**, **Azure OpenAI**, and **AWS Bedrock**. Provider selection is controlled entirely through environment variables — no code changes required.
+problemist supports four LLM providers out of the box: **Anthropic**, **OpenAI**, **Azure OpenAI**, and **AWS Bedrock**. Provider selection is controlled entirely through environment variables — no code changes required.
 
 **Single-provider mode** (default, `LLM_MODE=single`): one provider handles all tasks.
 
