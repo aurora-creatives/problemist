@@ -1,9 +1,9 @@
 import logging
 
-from taproot.config import get_settings
-from taproot.mock.data_loader import MockDataLoader
-from taproot.models.ticket import Ticket
-from taproot.pageindex import PageIndex
+from problemist.config import get_settings
+from problemist.mock.data_loader import MockDataLoader
+from problemist.models.ticket import Ticket
+from problemist.pageindex import PageIndex
 
 logger = logging.getLogger(__name__)
 
@@ -51,7 +51,7 @@ def fetch_tickets(
         raise NotImplementedError(
             "Real ITSM integration is not yet implemented. "
             "Set USE_MOCK_DATA=true in your .env file to use fixture data, "
-            "or implement a provider adapter in taproot/providers/."
+            "or implement a provider adapter in problemist/providers/."
         )
     return _loader.get_tickets(days=days, service=service, priority=priority, category=category)
 

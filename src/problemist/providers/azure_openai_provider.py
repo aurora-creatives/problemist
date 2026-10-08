@@ -5,8 +5,8 @@ import logging
 
 import openai
 
-from taproot.providers.base import LLMResponse, ToolCall
-from taproot.providers.openai_provider import _translate_messages, _translate_tools
+from problemist.providers.base import LLMResponse, ToolCall
+from problemist.providers.openai_provider import _translate_messages, _translate_tools
 
 logger = logging.getLogger(__name__)
 

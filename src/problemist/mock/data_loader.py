@@ -3,8 +3,8 @@ import logging
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from taproot.models.problem import ProblemRecord
-from taproot.models.ticket import Ticket
+from problemist.models.problem import ProblemRecord
+from problemist.models.ticket import Ticket
 
 logger = logging.getLogger(__name__)
 

@@ -1,9 +1,9 @@
 import logging
 from datetime import datetime, timezone
 
-from taproot.config import get_settings
-from taproot.mock.data_loader import MockDataLoader
-from taproot.models.problem import ProblemPriority, ProblemRecord, ProblemStatus
+from problemist.config import get_settings
+from problemist.mock.data_loader import MockDataLoader
+from problemist.models.problem import ProblemPriority, ProblemRecord, ProblemStatus
 
 logger = logging.getLogger(__name__)
 

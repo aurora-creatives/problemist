@@ -2,8 +2,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from taproot.providers.router import LLMRouter, TaskType
-from taproot.providers.scrubbed_provider import ScrubbedProvider
+from problemist.providers.router import LLMRouter, TaskType
+from problemist.providers.scrubbed_provider import ScrubbedProvider
 
 
 def _make_settings(
@@ -38,7 +38,7 @@ def _make_settings(
 class TestLLMRouterSingleMode:
     def test_single_mode_returns_same_instance_for_all_tasks(self) -> None:
         """In single mode, all three task types return the exact same provider instance."""
-        with patch("taproot.providers.openai_provider.openai.AsyncOpenAI"):
+        with patch("problemist.providers.openai_provider.openai.AsyncOpenAI"):
             router = LLMRouter(_make_settings(mode="single", provider="openai"))
         p_rerank = router.get(TaskType.RERANK)
         p_analysis = router.get(TaskType.ANALYSIS)
@@ -47,12 +47,12 @@ class TestLLMRouterSingleMode:
         assert p_analysis is p_draft
 
     def test_mode_property_returns_single(self) -> None:
-        with patch("taproot.providers.openai_provider.openai.AsyncOpenAI"):
+        with patch("problemist.providers.openai_provider.openai.AsyncOpenAI"):
             router = LLMRouter(_make_settings(mode="single"))
         assert router.mode == "single"
 
     def test_single_mode_provider_name(self) -> None:
-        with patch("taproot.providers.openai_provider.openai.AsyncOpenAI"):
+        with patch("problemist.providers.openai_provider.openai.AsyncOpenAI"):
             router = LLMRouter(_make_settings(mode="single", provider="openai"))
         assert router.get(TaskType.ANALYSIS).provider_name == "openai"
 
@@ -72,7 +72,7 @@ class TestLLMRouterMultiMode:
 
     def test_multi_mode_returns_different_instances(self) -> None:
         """In multi mode, each task type should return a distinct provider instance."""
-        with patch("taproot.providers.openai_provider.openai.AsyncOpenAI"):
+        with patch("problemist.providers.openai_provider.openai.AsyncOpenAI"):
             router = LLMRouter(self._multi_settings())
         p_rerank = router.get(TaskType.RERANK)
         p_analysis = router.get(TaskType.ANALYSIS)
@@ -82,7 +82,7 @@ class TestLLMRouterMultiMode:
         assert p_analysis is not p_draft
 
     def test_mode_property_returns_multi(self) -> None:
-        with patch("taproot.providers.openai_provider.openai.AsyncOpenAI"):
+        with patch("problemist.providers.openai_provider.openai.AsyncOpenAI"):
             router = LLMRouter(self._multi_settings())
         assert router.mode == "multi"
 
@@ -93,7 +93,7 @@ class TestLLMRouterMultiMode:
             analysis_provider="openai", analysis_model="gpt-4o",
             draft_provider="openai", draft_model="gpt-4o",
         )
-        with patch("taproot.providers.openai_provider.openai.AsyncOpenAI"):
+        with patch("problemist.providers.openai_provider.openai.AsyncOpenAI"):
             router = LLMRouter(s)
         assert router.get(TaskType.RERANK).model_name == "gpt-4o-mini"
 
@@ -104,7 +104,7 @@ class TestLLMRouterMultiMode:
             analysis_provider="openai", analysis_model="gpt-4o",
             draft_provider="openai", draft_model="gpt-4o",
         )
-        with patch("taproot.providers.openai_provider.openai.AsyncOpenAI"):
+        with patch("problemist.providers.openai_provider.openai.AsyncOpenAI"):
             router = LLMRouter(s)
         assert router.get(TaskType.ANALYSIS).model_name == "gpt-4o"
 
@@ -112,13 +112,13 @@ class TestLLMRouterMultiMode:
 class TestLLMRouterScrubbing:
     def test_scrubbing_wraps_provider_in_single_mode(self) -> None:
         """When ENABLE_SCRUBBING=True, get() returns a ScrubbedProvider."""
-        with patch("taproot.providers.openai_provider.openai.AsyncOpenAI"):
+        with patch("problemist.providers.openai_provider.openai.AsyncOpenAI"):
             router = LLMRouter(_make_settings(mode="single", enable_scrubbing=True))
         provider = router.get(TaskType.ANALYSIS)
         assert isinstance(provider, ScrubbedProvider)
 
     def test_scrubbing_wraps_all_providers_in_multi_mode(self) -> None:
-        with patch("taproot.providers.openai_provider.openai.AsyncOpenAI"):
+        with patch("problemist.providers.openai_provider.openai.AsyncOpenAI"):
             router = LLMRouter(_make_settings(
                 mode="multi",
                 rerank_provider="openai", rerank_model="gpt-4o-mini",
@@ -130,13 +130,13 @@ class TestLLMRouterScrubbing:
             assert isinstance(router.get(task), ScrubbedProvider)
 
     def test_scrubbed_provider_name_contains_inner_name(self) -> None:
-        with patch("taproot.providers.openai_provider.openai.AsyncOpenAI"):
+        with patch("problemist.providers.openai_provider.openai.AsyncOpenAI"):
             router = LLMRouter(_make_settings(mode="single", provider="openai", enable_scrubbing=True))
         provider = router.get(TaskType.ANALYSIS)
         assert "openai" in provider.provider_name
 
     def test_no_scrubbing_by_default(self) -> None:
-        with patch("taproot.providers.openai_provider.openai.AsyncOpenAI"):
+        with patch("problemist.providers.openai_provider.openai.AsyncOpenAI"):
             router = LLMRouter(_make_settings(mode="single", enable_scrubbing=False))
         assert not isinstance(router.get(TaskType.ANALYSIS), ScrubbedProvider)
 

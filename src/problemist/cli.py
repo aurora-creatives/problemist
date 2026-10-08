@@ -11,13 +11,13 @@ from rich.panel import Panel
 from rich.prompt import Prompt
 from rich.table import Table
 
-from taproot.config import get_settings
-from taproot.models.problem import ProblemRecord, ProblemStatus
-from taproot.tools.problems import get_existing_problems
-from taproot.tools.tickets import fetch_tickets
+from problemist.config import get_settings
+from problemist.models.problem import ProblemRecord, ProblemStatus
+from problemist.tools.problems import get_existing_problems
+from problemist.tools.tickets import fetch_tickets
 
 app = typer.Typer(
-    name="taproot",
+    name="problemist",
     help="Finds the root beneath the noise. Surfaces ITSM problem records that should exist but don't.",
     add_completion=False,
 )
@@ -43,7 +43,7 @@ def run(
     max_records: int = typer.Option(10, "--max-records", help="Maximum number of problem records to draft."),
 ) -> None:
     """Run the agentic analysis to discover recurring incident patterns."""
-    from taproot.agent import run_analysis
+    from problemist.agent import run_analysis
 
     settings = get_settings()
     settings.configure_logging()
@@ -53,7 +53,7 @@ def run(
             f"Analysing [bold]{days}[/bold] days of ticket history"
             + (f" for service [bold]{service}[/bold]" if service else "")
             + f"\nMax problem records: [bold]{max_records}[/bold]",
-            title="[bold green]taproot run[/bold green]",
+            title="[bold green]problemist run[/bold green]",
             border_style="green",
         )
     )
@@ -90,7 +90,7 @@ def run(
     draft_path.write_text(json.dumps(records_data, indent=2, default=str), encoding="utf-8")
 
     console.print(f"\n[bold green]Drafts saved to:[/bold green] {draft_path}")
-    console.print("\nRun [bold]taproot review[/bold] to approve or reject draft records.")
+    console.print("\nRun [bold]problemist review[/bold] to approve or reject draft records.")
 
 
 @app.command()
@@ -105,7 +105,7 @@ def review(
         if file is None:
             err_console.print(
                 "[bold red]No draft file found.[/bold red] "
-                "Run [bold]taproot run[/bold] first to generate draft records."
+                "Run [bold]problemist run[/bold] first to generate draft records."
             )
             raise typer.Exit(code=1)
 
@@ -124,7 +124,7 @@ def review(
         Panel(
             f"Reviewing [bold]{len(records)}[/bold] draft problem records\n"
             f"Source: {file}",
-            title="[bold blue]taproot review[/bold blue]",
+            title="[bold blue]problemist review[/bold blue]",
             border_style="blue",
         )
     )
@@ -324,7 +324,7 @@ def list_problems() -> None:
 
 
 def main() -> None:
-    """Entry point for the taproot CLI."""
+    """Entry point for the problemist CLI."""
     app()
 
 

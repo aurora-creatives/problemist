@@ -2,8 +2,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from taproot.models.problem import AnalysisSummary
-from taproot.providers.base import LLMResponse, ToolCall
+from problemist.models.problem import AnalysisSummary
+from problemist.providers.base import LLMResponse, ToolCall
 
 
 def _make_llm_response(
@@ -50,7 +50,7 @@ def _make_mock_router(analysis_responses: list, draft_responses: list | None = N
     router.mode = "single"
 
     def get_provider(task):
-        from taproot.providers.router import TaskType
+        from problemist.providers.router import TaskType
         if task == TaskType.RERANK:
             return rerank_provider
         if task == TaskType.DRAFT:
@@ -67,8 +67,8 @@ async def test_agent_handles_tool_use_then_end_turn():
     Agent loop should execute a tool_use response, append results,
     then stop on end_turn. Returns an AnalysisSummary.
     """
-    from taproot.agent import run_analysis
-    from taproot.tools.problems import clear_draft_store
+    from problemist.agent import run_analysis
+    from problemist.tools.problems import clear_draft_store
 
     clear_draft_store()
 
@@ -80,12 +80,12 @@ async def test_agent_handles_tool_use_then_end_turn():
 
     router, analysis_provider, _, _ = _make_mock_router(analysis_responses)
 
-    with patch("taproot.agent.LLMRouter", return_value=router), \
-         patch("taproot.agent.get_settings") as mock_settings, \
-         patch("taproot.agent.PageIndex") as MockPageIndex, \
-         patch("taproot.agent.MockDataLoader"), \
-         patch("taproot.agent.set_page_index"), \
-         patch("taproot.tools.tickets.get_settings") as mock_tool_settings:
+    with patch("problemist.agent.LLMRouter", return_value=router), \
+         patch("problemist.agent.get_settings") as mock_settings, \
+         patch("problemist.agent.PageIndex") as MockPageIndex, \
+         patch("problemist.agent.MockDataLoader"), \
+         patch("problemist.agent.set_page_index"), \
+         patch("problemist.tools.tickets.get_settings") as mock_tool_settings:
 
         mock_settings.return_value.LLM_MODE = "single"
         mock_settings.return_value.PAGEINDEX_USE_SEMANTIC = False
@@ -105,8 +105,8 @@ async def test_agent_handles_tool_use_then_end_turn():
 @pytest.mark.asyncio
 async def test_agent_stops_at_max_iterations():
     """Agent loop should stop after max_iterations even if the model keeps requesting tools."""
-    from taproot.agent import _MAX_ITERATIONS, run_analysis
-    from taproot.tools.problems import clear_draft_store
+    from problemist.agent import _MAX_ITERATIONS, run_analysis
+    from problemist.tools.problems import clear_draft_store
 
     clear_draft_store()
 
@@ -116,12 +116,12 @@ async def test_agent_stops_at_max_iterations():
     analysis_responses = [always_tool] * (_MAX_ITERATIONS + 5)
     router, analysis_provider, _, _ = _make_mock_router(analysis_responses)
 
-    with patch("taproot.agent.LLMRouter", return_value=router), \
-         patch("taproot.agent.get_settings") as mock_settings, \
-         patch("taproot.agent.PageIndex") as MockPageIndex, \
-         patch("taproot.agent.MockDataLoader"), \
-         patch("taproot.agent.set_page_index"), \
-         patch("taproot.tools.tickets.get_settings") as mock_tool_settings:
+    with patch("problemist.agent.LLMRouter", return_value=router), \
+         patch("problemist.agent.get_settings") as mock_settings, \
+         patch("problemist.agent.PageIndex") as MockPageIndex, \
+         patch("problemist.agent.MockDataLoader"), \
+         patch("problemist.agent.set_page_index"), \
+         patch("problemist.tools.tickets.get_settings") as mock_tool_settings:
 
         mock_settings.return_value.LLM_MODE = "single"
         mock_settings.return_value.PAGEINDEX_USE_SEMANTIC = False
@@ -141,19 +141,19 @@ async def test_agent_stops_at_max_iterations():
 @pytest.mark.asyncio
 async def test_agent_returns_analysis_summary_on_completion():
     """run_analysis() should always return an AnalysisSummary regardless of content."""
-    from taproot.agent import run_analysis
-    from taproot.tools.problems import clear_draft_store
+    from problemist.agent import run_analysis
+    from problemist.tools.problems import clear_draft_store
 
     clear_draft_store()
 
     analysis_responses = [_make_llm_response("end_turn", content="No recurring patterns found.")]
     router, _, _, _ = _make_mock_router(analysis_responses)
 
-    with patch("taproot.agent.LLMRouter", return_value=router), \
-         patch("taproot.agent.get_settings") as mock_settings, \
-         patch("taproot.agent.PageIndex") as MockPageIndex, \
-         patch("taproot.agent.MockDataLoader"), \
-         patch("taproot.agent.set_page_index"):
+    with patch("problemist.agent.LLMRouter", return_value=router), \
+         patch("problemist.agent.get_settings") as mock_settings, \
+         patch("problemist.agent.PageIndex") as MockPageIndex, \
+         patch("problemist.agent.MockDataLoader"), \
+         patch("problemist.agent.set_page_index"):
 
         mock_settings.return_value.LLM_MODE = "single"
         mock_settings.return_value.PAGEINDEX_USE_SEMANTIC = False
@@ -172,8 +172,8 @@ async def test_agent_returns_analysis_summary_on_completion():
 @pytest.mark.asyncio
 async def test_agent_routes_draft_task_to_draft_provider():
     """When draft_problem_record tool is called, the NEXT iteration uses draft_provider."""
-    from taproot.agent import run_analysis
-    from taproot.tools.problems import clear_draft_store
+    from problemist.agent import run_analysis
+    from problemist.tools.problems import clear_draft_store
 
     clear_draft_store()
 
@@ -201,12 +201,12 @@ async def test_agent_routes_draft_task_to_draft_provider():
         analysis_responses, draft_responses
     )
 
-    with patch("taproot.agent.LLMRouter", return_value=router), \
-         patch("taproot.agent.get_settings") as mock_settings, \
-         patch("taproot.agent.PageIndex") as MockPageIndex, \
-         patch("taproot.agent.MockDataLoader"), \
-         patch("taproot.agent.set_page_index"), \
-         patch("taproot.tools.tickets.get_settings") as mock_tool_settings:
+    with patch("problemist.agent.LLMRouter", return_value=router), \
+         patch("problemist.agent.get_settings") as mock_settings, \
+         patch("problemist.agent.PageIndex") as MockPageIndex, \
+         patch("problemist.agent.MockDataLoader"), \
+         patch("problemist.agent.set_page_index"), \
+         patch("problemist.tools.tickets.get_settings") as mock_tool_settings:
 
         mock_settings.return_value.LLM_MODE = "single"
         mock_settings.return_value.PAGEINDEX_USE_SEMANTIC = False
@@ -218,7 +218,7 @@ async def test_agent_routes_draft_task_to_draft_provider():
 
         await run_analysis(days=30, max_problem_records=1)
 
-    from taproot.providers.router import TaskType
+    from problemist.providers.router import TaskType
     # Verify router.get was called with DRAFT task
     draft_calls = [c for c in router.get.call_args_list if c.args and c.args[0] == TaskType.DRAFT]
     assert len(draft_calls) >= 1, "router.get(TaskType.DRAFT) should have been called"

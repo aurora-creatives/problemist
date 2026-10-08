@@ -3,8 +3,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from taproot.models.ticket import Ticket, TicketPriority, TicketStatus
-from taproot.pageindex import PageIndex
+from problemist.models.ticket import Ticket, TicketPriority, TicketStatus
+from problemist.pageindex import PageIndex
 
 
 def test_build_succeeds(sample_ticket_list):

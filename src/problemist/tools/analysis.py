@@ -1,7 +1,7 @@
 import logging
 from collections import Counter
 
-from taproot.mock.data_loader import MockDataLoader
+from problemist.mock.data_loader import MockDataLoader
 
 logger = logging.getLogger(__name__)
 

@@ -1,6 +1,6 @@
 import pytest
 
-from taproot.scrubbing.scrubber import DataScrubber
+from problemist.scrubbing.scrubber import DataScrubber
 
 
 @pytest.fixture

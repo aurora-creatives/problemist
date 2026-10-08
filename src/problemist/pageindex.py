@@ -11,10 +11,10 @@ from rank_bm25 import BM25Okapi
 from rich.console import Console
 from rich.status import Status
 
-from taproot.models.ticket import Ticket
+from problemist.models.ticket import Ticket
 
 if TYPE_CHECKING:
-    from taproot.providers.base import LLMProvider
+    from problemist.providers.base import LLMProvider
 
 logger = logging.getLogger(__name__)
 _console = Console(stderr=True)

@@ -4,22 +4,22 @@ import logging
 from enum import Enum
 from typing import TYPE_CHECKING
 
-from taproot.providers.anthropic_provider import AnthropicProvider
-from taproot.providers.azure_openai_provider import AzureOpenAIProvider
-from taproot.providers.base import LLMProvider
-from taproot.providers.bedrock_provider import AWSBedrockProvider
-from taproot.providers.openai_provider import OpenAIProvider
-from taproot.providers.scrubbed_provider import ScrubbedProvider
+from problemist.providers.anthropic_provider import AnthropicProvider
+from problemist.providers.azure_openai_provider import AzureOpenAIProvider
+from problemist.providers.base import LLMProvider
+from problemist.providers.bedrock_provider import AWSBedrockProvider
+from problemist.providers.openai_provider import OpenAIProvider
+from problemist.providers.scrubbed_provider import ScrubbedProvider
 
 if TYPE_CHECKING:
-    from taproot.config import Settings
-    from taproot.scrubbing.scrubber import DataScrubber
+    from problemist.config import Settings
+    from problemist.scrubbing.scrubber import DataScrubber
 
 logger = logging.getLogger(__name__)
 
 
 class TaskType(str, Enum):
-    """The three distinct LLM tasks taproot performs."""
+    """The three distinct LLM tasks problemist performs."""
 
     RERANK = "rerank"
     ANALYSIS = "analysis"
@@ -44,7 +44,7 @@ class LLMRouter:
         self._mode = settings.LLM_MODE
 
         # Lazy import to avoid circular imports
-        from taproot.scrubbing.scrubber import DataScrubber
+        from problemist.scrubbing.scrubber import DataScrubber
 
         scrubber: DataScrubber | None = DataScrubber() if settings.ENABLE_SCRUBBING else None
 

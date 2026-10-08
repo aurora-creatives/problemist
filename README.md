@@ -1,12 +1,12 @@
-# taproot
+# problemist
 
 **Finds the root beneath the noise.**  
 Surfaces ITSM problem records that should exist but don't.
 
-[![CI](https://github.com/aurora-creatives/taproot/actions/workflows/ci.yml/badge.svg)](https://github.com/aurora-creatives/taproot/actions/workflows/ci.yml)
+[![CI](https://github.com/aurora-creatives/problemist/actions/workflows/ci.yml/badge.svg)](https://github.com/aurora-creatives/problemist/actions/workflows/ci.yml)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Multi-provider](https://img.shields.io/badge/LLM-Anthropic%20%7C%20OpenAI%20%7C%20Azure%20%7C%20Bedrock-6B48FF)](https://github.com/aurora-creatives/taproot)
+[![Multi-provider](https://img.shields.io/badge/LLM-Anthropic%20%7C%20OpenAI%20%7C%20Azure%20%7C%20Bedrock-6B48FF)](https://github.com/aurora-creatives/problemist)
 [![Code style: ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 ---
@@ -17,11 +17,11 @@ Your support team is probably resolving the same five problems every week withou
 
 Most ITSM tools capture incidents. Very few help you notice that incidents keep coming back. ITIL calls this **Problem Management** — the practice of finding and eliminating root causes, not just symptoms. In practice, it almost never happens because nobody has the time to read through hundreds of tickets looking for patterns.
 
-**taproot does it for you.** It reads your ticket history, reasons across it using an AI agent, and drafts ITIL-compliant problem records with root cause analysis — ready for a human to review and approve. Your team resolves the root cause once instead of the symptom repeatedly.
+**problemist does it for you.** It reads your ticket history, reasons across it using an AI agent, and drafts ITIL-compliant problem records with root cause analysis — ready for a human to review and approve. Your team resolves the root cause once instead of the symptom repeatedly.
 
 ---
 
-## What taproot does
+## What problemist does
 
 1. **Fetches** your incident ticket history (from mock fixtures by default, or a real ITSM via env vars).
 2. **Searches** for tickets that are operationally similar using BM25 keyword matching with LLM reranking.
@@ -35,9 +35,9 @@ Most ITSM tools capture incidents. Very few help you notice that incidents keep 
 ## Demo
 
 ```
-$ taproot run --days 90
+$ problemist run --days 90
 
-  taproot — agent running
+  problemist — agent running
   ┌─────────────────────────────────────────┐
   │ Tool            search_similar_tickets  │
   │ Tickets seen    35                      │
@@ -55,9 +55,9 @@ $ taproot run --days 90
   └──────────────────────────────┴───────┘
 
   Drafts saved to: output/drafts_20260612_143201.json
-  Run `taproot review` to approve or reject draft records.
+  Run `problemist review` to approve or reject draft records.
 
-$ taproot review
+$ problemist review
 
   Reviewing 3 draft problem records
 
@@ -77,11 +77,11 @@ $ taproot review
 
 ## How it works
 
-**The agent loop.** taproot runs an AI agent that reasons over your ticket corpus autonomously using a configurable LLM. It is given six tools — fetch tickets, search for similar tickets, get ticket details, analyse a cluster, check for existing problems, draft a problem record — and decides how to use them. The loop continues until the agent has reviewed the full corpus or reached the configured maximum draft count.
+**The agent loop.** problemist runs an AI agent that reasons over your ticket corpus autonomously using a configurable LLM. It is given six tools — fetch tickets, search for similar tickets, get ticket details, analyse a cluster, check for existing problems, draft a problem record — and decides how to use them. The loop continues until the agent has reviewed the full corpus or reached the configured maximum draft count.
 
-**PageIndex.** taproot retrieves similar tickets using a hybrid of BM25 (Best Match 25) keyword ranking and local semantic embeddings (`sentence-transformers`), combined via Reciprocal Rank Fusion (RRF). This runs entirely on-device — no ticket data leaves the machine for retrieval. Optional LLM reranking is layered on top for the final ordering pass.
+**PageIndex.** problemist retrieves similar tickets using a hybrid of BM25 (Best Match 25) keyword ranking and local semantic embeddings (`sentence-transformers`), combined via Reciprocal Rank Fusion (RRF). This runs entirely on-device — no ticket data leaves the machine for retrieval. Optional LLM reranking is layered on top for the final ordering pass.
 
-**Human-in-the-loop.** Nothing in taproot auto-approves or auto-publishes. Every draft problem record goes through `taproot review`, where a human reads the full analysis and decides to approve, reject, or annotate it. Confidence scores (`HIGH` / `MEDIUM` / `LOW`) are shown prominently so reviewers can prioritise.
+**Human-in-the-loop.** Nothing in problemist auto-approves or auto-publishes. Every draft problem record goes through `problemist review`, where a human reads the full analysis and decides to approve, reject, or annotate it. Confidence scores (`HIGH` / `MEDIUM` / `LOW`) are shown prominently so reviewers can prioritise.
 
 See [docs/architecture.md](docs/architecture.md) for the full system design.
 
@@ -89,7 +89,7 @@ See [docs/architecture.md](docs/architecture.md) for the full system design.
 
 ## Providers and Compliance
 
-taproot supports four LLM providers. One env var switches between them — no code changes.
+problemist supports four LLM providers. One env var switches between them — no code changes.
 
 ### Provider comparison
 
@@ -140,14 +140,14 @@ LLM_DRAFT_MODEL=gpt-4o
 ## Quick start
 
 ```bash
-git clone https://github.com/aurora-creatives/taproot
-cd taproot
+git clone https://github.com/aurora-creatives/problemist
+cd problemist
 pip install -e .
 cp .env.example .env
 # Add your ANTHROPIC_API_KEY (or OPENAI_API_KEY) to .env
-taproot list-tickets      # verify 35 mock tickets load
-taproot run               # run the agent
-taproot review            # review draft problem records
+problemist list-tickets      # verify 35 mock tickets load
+problemist run               # run the agent
+problemist review            # review draft problem records
 ```
 
 > **No ITSM credentials needed to try it.** `USE_MOCK_DATA=true` (the default) runs entirely on the 35 built-in fixture tickets — 3 hidden recurring patterns + 8 noise incidents.
@@ -181,7 +181,7 @@ See `.env.example` for the full set of variables. Key settings:
 
 ## Connecting real ITSM
 
-taproot ships with mock data enabled. To connect a real ITSM system, set `USE_MOCK_DATA=false` and provide credentials — then implement the provider adapter (see [docs/architecture.md](docs/architecture.md#extending-taproot)).
+problemist ships with mock data enabled. To connect a real ITSM system, set `USE_MOCK_DATA=false` and provide credentials — then implement the provider adapter (see [docs/architecture.md](docs/architecture.md#extending-problemist)).
 
 ### ServiceNow
 
@@ -206,8 +206,8 @@ JIRA_API_TOKEN=your_api_token
 ## Project structure
 
 ```
-taproot/
-├── src/taproot/
+problemist/
+├── src/problemist/
 │   ├── agent.py          # Agentic loop — LLMRouter + Anthropic message format
 │   ├── pageindex.py      # Hybrid BM25 + semantic search + RRF fusion
 │   ├── config.py         # Settings (pydantic-settings, .env)
@@ -231,7 +231,7 @@ taproot/
 
 ```bash
 pytest                    # full suite (45 tests, ~0.5s)
-pytest --cov=taproot      # with coverage report
+pytest --cov=problemist      # with coverage report
 pytest -v                 # verbose output
 ```
 

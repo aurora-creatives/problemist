@@ -37,7 +37,7 @@ class ProblemRecord(BaseModel):
 
 
 class AnalysisSummary(BaseModel):
-    """Summary of a completed taproot analysis run."""
+    """Summary of a completed problemist analysis run."""
 
     tickets_analysed: int
     clusters_found: int

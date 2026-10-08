@@ -6,7 +6,7 @@ from typing import Any
 
 import boto3
 
-from taproot.providers.base import LLMResponse, ToolCall
+from problemist.providers.base import LLMResponse, ToolCall
 
 logger = logging.getLogger(__name__)
 
