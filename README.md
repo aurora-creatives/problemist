@@ -9,6 +9,8 @@ Surfaces ITSM problem records that should exist but don't.
 [![Multi-provider](https://img.shields.io/badge/LLM-Anthropic%20%7C%20OpenAI%20%7C%20Azure%20%7C%20Bedrock-6B48FF)](https://github.com/aurora-creatives/problemist)
 [![Code style: ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
+![problemist demo](docs/assets/demo.gif)
+
 ---
 
 ## The problem
