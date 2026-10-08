@@ -9,6 +9,15 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+- **Renamed the project from `taproot` to `problemist`.** The package is now `problemist`, and the CLI command is `problemist` (`problemist run`, `problemist review`, ...). Existing editable installs need `git pull` then `pip install -e .` again.
+
+### Fixed
+- Mock fixture tickets are now windowed back from the newest ticket, not from today's date. Previously `--days 90` returned no tickets once the fixtures were more than 90 days old, which broke the README demo and two tests.
+
+### Added
+- Tests for the mock data loader's time window and for the AWS Bedrock provider.
+
 ---
 
 ## [0.2.0] — 2026-06-24

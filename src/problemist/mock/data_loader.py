@@ -28,7 +28,9 @@ class MockDataLoader:
     ) -> list[Ticket]:
         """Return tickets from fixtures, applying the given filters in memory."""
         all_tickets = self._load_tickets()
-        cutoff = datetime.now(tz=timezone.utc) - timedelta(days=days)
+        # Fixtures are a fixed snapshot, so measure the window back from the newest
+        # ticket rather than from today. Otherwise the demo empties out as time passes.
+        cutoff = self._as_of(all_tickets) - timedelta(days=days)
 
         results = []
         for ticket in all_tickets:
@@ -47,6 +49,14 @@ class MockDataLoader:
 
         logger.debug("fetch_tickets returned %d tickets (days=%d)", len(results), days)
         return results
+
+    @staticmethod
+    def _as_of(tickets: list[Ticket]) -> datetime:
+        """Return the reference time for the fixture window: the newest ticket's creation time."""
+        if not tickets:
+            return datetime.now(tz=timezone.utc)
+        newest = max(t.created_at for t in tickets)
+        return newest if newest.tzinfo else newest.replace(tzinfo=timezone.utc)
 
     def get_ticket_by_id(self, ticket_id: str) -> Ticket:
         """Return a single ticket by ID, raising ValueError if not found."""
